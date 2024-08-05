@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         providers: [
           RepositoryProvider(
             create: (context) => CarRepository(
-              apiUrl: 'https://noeaywzny9.execute-api.us-east-1.amazonaws.com/Prod/hello'
+              apiUrl: 'https://atgh8nbpvf.execute-api.us-east-1.amazonaws.com/Prod/get_all_data_vehicle'
             ),
           ),
         ],

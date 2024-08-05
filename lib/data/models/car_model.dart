@@ -1,15 +1,15 @@
 class CarModel {
-  final String? id;
+  final int? id;
   final String marca;
   final String modelo;
-  final String VelocidadMaxima;
+  final String velocidadMaxima;
   final String autonomia;
 
   CarModel({
     this.id,
     required this.marca,
     required this.modelo,
-    required this.VelocidadMaxima,
+    required this.velocidadMaxima,
     required this.autonomia
   });
 
@@ -18,7 +18,7 @@ class CarModel {
       id: json['id'],
       marca: json['marca'],
       modelo: json['modelo'],
-      VelocidadMaxima: json['velocidadMaxima'],
+      velocidadMaxima: json['velocidadMaxima'],
       autonomia: json['autonomia'],
     );
   }
@@ -28,7 +28,7 @@ class CarModel {
       'id': id,
       'marca': marca,
       'modelo': modelo,
-      'velocidadMaxima': VelocidadMaxima,
+      'velocidadMaxima': velocidadMaxima,
       'autonomia': autonomia,
     };
   }

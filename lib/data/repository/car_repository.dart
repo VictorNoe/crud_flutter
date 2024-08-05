@@ -9,7 +9,7 @@ class CarRepository {
 
   Future<void> createCar(CarModel car) async {
     final response = await http.post(
-      Uri.parse('$apiUrl/car'),
+      Uri.parse('https://atgh8nbpvf.execute-api.us-east-1.amazonaws.com/Prod/insert_data_vehicle'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         //'Authorization': 'Bearer $accessToken',
@@ -39,7 +39,7 @@ class CarRepository {
 
   Future<void> updateCar(CarModel car) async {
     final response = await http.put(
-      Uri.parse('$apiUrl/car'),
+      Uri.parse('https://atgh8nbpvf.execute-api.us-east-1.amazonaws.com/Prod/update_data_vehicle'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         //'Authorization': 'Bearer $accessToken',
@@ -54,10 +54,12 @@ class CarRepository {
 
   Future<void> deleteCar(String id) async {
     final response = await http.delete(
-      Uri.parse('$apiUrl/car/$id'),
+      Uri.parse('https://atgh8nbpvf.execute-api.us-east-1.amazonaws.com/Prod/delete_data_vehicle'),
       headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
         //'Authorization': 'Bearer $accessToken',
       },
+      body: jsonEncode({'id': id}),
     );
 
     if (response.statusCode != 200) {
@@ -67,7 +69,7 @@ class CarRepository {
 
   Future<List<CarModel>> getAllCar() async {
     final response = await http.get(
-      Uri.parse('$apiUrl'),
+      Uri.parse('https://atgh8nbpvf.execute-api.us-east-1.amazonaws.com/Prod/get_all_data_vehicle'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         //'Authorization': 'Bearer $accessToken',
