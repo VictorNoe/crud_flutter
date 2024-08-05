@@ -12,7 +12,8 @@ class CarListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Car List'),
+        title: const Text('Car List', style: TextStyle(fontSize: 18, color: Colors.white)),
+        backgroundColor: Colors.deepPurple,
       ),
       body: BlocProvider(
         create: (context) => CarCubit(
@@ -24,69 +25,103 @@ class CarListView extends StatelessWidget {
   }
 }
 
-class CarListScreen extends StatelessWidget {
+class CarListScreen extends StatefulWidget {
   const CarListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final carCubit = BlocProvider.of<CarCubit>(context);
+  _CarListScreenState createState() => _CarListScreenState();
+}
 
-    return Column(
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            carCubit.fetchAllCar();
-          },
-          child: const Text('Fetch Cars'),
-        ),
-        Expanded(
-          child: BlocBuilder<CarCubit, CarState>(
-            builder: (context, state) {
-              if (state is CarLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is CarSuccess) {
-                final cars = state.car;
-                return ListView.builder(
-                  itemCount: cars.length,
-                  itemBuilder: (context, index) {
-                    final car = cars[index];
-                    return ListTile(
-                      title: Text(car.marca),
-                      subtitle: Text(car.modelo),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: () {
-                              _showUpdateCarDialog(context, car, carCubit);
-                            },
+class _CarListScreenState extends State<CarListScreen> {
+  late CarCubit carCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    carCubit = BlocProvider.of<CarCubit>(context);
+    carCubit.fetchAllCar(); // Fetch cars when the widget is initialized
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          Expanded(
+            child: BlocBuilder<CarCubit, CarState>(
+              builder: (context, state) {
+                if (state is CarLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is CarSuccess) {
+                  final cars = state.car;
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(8.0),
+                    itemCount: cars.length,
+                    itemBuilder: (context, index) {
+                      final car = cars[index];
+                      return Card(
+                        elevation: 5,
+                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: ListTile(
+                          leading: Icon(Icons.directions_car, color: Colors.deepPurple),
+                          title: Text(
+                            car.marca,
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {
-                              carCubit.deleteCar(car.id.toString());
-                            },
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Modelo: ${car.modelo}'),
+                              Text('Velocidad Máxima: ${car.velocidadMaxima} km/h'),
+                              Text('Autonomía: ${car.autonomia} km'),
+                            ],
                           ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              } else if (state is CarError) {
-                return Center(child: Text('Error: ${state.message}'));
-              }
-              return const Center(child: Text('Press the button to fetch cars'));
-            },
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.edit, color: Colors.deepPurple),
+                                onPressed: () {
+                                  _showUpdateCarDialog(context, car, carCubit);
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  carCubit.deleteCar(car.id.toString());
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                } else if (state is CarError) {
+                  return Center(child: Text('Error: ${state.message}'));
+                }
+                return const Center(child: Text('Press the button to fetch cars'));
+              },
+            ),
           ),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            _showCreateCarDialog(context, carCubit);
-          },
-          child: const Text('Add Car'),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                _showCreateCarDialog(context, carCubit);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: const Text('Agregar auto', style: TextStyle(fontSize: 18, color: Colors.white)),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -100,7 +135,7 @@ class CarListScreen extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Create Car'),
+          title: Text('Añadir auto'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -124,13 +159,13 @@ class CarListScreen extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              child: Text('Cancel'),
+              child: Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Create'),
+              child: Text('Añadir'),
               onPressed: () {
                 final newCar = CarModel(
                   marca: marcaController.text,
@@ -158,7 +193,7 @@ class CarListScreen extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Update Car'),
+          title: Text('Actualizar auto'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -182,13 +217,13 @@ class CarListScreen extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              child: Text('Cancel'),
+              child: Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Update'),
+              child: Text('Actualizar'),
               onPressed: () {
                 final updatedCar = CarModel(
                   id: car.id,

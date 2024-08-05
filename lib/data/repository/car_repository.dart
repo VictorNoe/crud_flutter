@@ -14,10 +14,10 @@ class CarRepository {
         'Content-Type': 'application/json; charset=UTF-8',
         //'Authorization': 'Bearer $accessToken',
       },
-      body: jsonEncode(car.toJson()..remove('id')),
+      body: jsonEncode(car.toJson()),
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode != 201) {
       throw Exception('Failed to create car');
     }
   }
