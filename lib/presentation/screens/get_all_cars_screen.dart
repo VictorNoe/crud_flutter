@@ -12,7 +12,7 @@ class CarListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Car List', style: TextStyle(fontSize: 18, color: Colors.white)),
+        title: const Text('Create by Victor Noe Flores Toledo', style: TextStyle(fontSize: 18, color: Colors.white)),
         backgroundColor: Colors.deepPurple,
       ),
       body: BlocProvider(
