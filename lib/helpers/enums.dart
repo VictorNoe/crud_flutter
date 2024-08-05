@@ -1,0 +1,1 @@
+enum CardRole { admin, user }
